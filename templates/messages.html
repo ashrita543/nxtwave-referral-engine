@@ -1,0 +1,9 @@
+{% extends "base.html" %}{% block body %}
+<span class="pill">Ambassador toolkit</span><h1>Message kit generator</h1>
+<p class="muted">Ambassadors and club leads shouldn't have to write copy. Pick a channel + college, copy a ready message with a tracked link (so the dashboard knows which channel worked).</p>
+<div class="grid g2">
+<form class="card" method="get"><label>Channel</label><select name="channel">{% for k,v in kit.items() %}<option value="{{ k }}" {{ 'selected' if k==ch }}>{{ v[0] }}</option>{% endfor %}</select>
+<label>College name</label><input name="college" value="{{ college }}"><button class="full">Generate</button></form>
+<div class="card"><h2>{{ kit[ch][0] }}</h2><textarea id="m" rows="11">{{ text }}</textarea>
+<button class="btn ghost full" onclick="navigator.clipboard.writeText(m.value);this.innerText='Copied ✓'">Copy message</button></div>
+</div>{% endblock %}

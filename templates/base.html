@@ -1,0 +1,8 @@
+<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>{% block title %}NxtWave AI Workshop{% endblock %}</title>
+<link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}"></head><body>
+<nav><div class="logo">Nxt<span>Wave</span> · AI Workshop</div>
+<a href="{{ url_for('landing') }}">Register</a><a href="{{ url_for('whatsapp') }}">WhatsApp bot</a>
+<a href="{{ url_for('leaderboard') }}">Leaderboard</a><a href="{{ url_for('admin') }}">Growth dashboard</a>
+<a href="{{ url_for('messages') }}">Message kit</a></nav>
+<div class="wrap">{% block body %}{% endblock %}</div></body></html>

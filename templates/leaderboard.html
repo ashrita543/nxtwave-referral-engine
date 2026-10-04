@@ -1,0 +1,11 @@
+{% extends "base.html" %}{% block body %}
+<h1>Leaderboard</h1><p class="muted">{{ count }} / {{ goal }} seats filled · top 3 referrers win vouchers · winning college gets a shout-out live</p>
+<div class="grid g2">
+ <div class="card"><h2>Top referrers</h2><table><tr><th>#</th><th>Name</th><th>College</th><th>Friends</th></tr>
+ {% for p in people %}<tr><td>{{ loop.index }}{{ ' 🥇' if loop.index==1 else ' 🥈' if loop.index==2 else ' 🥉' if loop.index==3 }}</td><td>{{ p.name }}</td><td class="muted">{{ p.college }}</td><td><b>{{ p.c }}</b></td></tr>
+ {% else %}<tr><td colspan=4 class="muted">No referrals yet — be the first!</td></tr>{% endfor %}</table></div>
+ <div class="card"><h2>College race</h2>
+ {% set mx = colleges[0].c if colleges else 1 %}
+ {% for c in colleges %}<div style="margin-bottom:10px"><div style="display:flex;justify-content:space-between;font-size:14px"><span>{{ c.college }}</span><b>{{ c.c }}</b></div><div class="bar"><i style="width:{{ (100*c.c/mx)|round|int }}%"></i></div></div>{% endfor %}
+ </div>
+</div>{% endblock %}

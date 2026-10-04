@@ -1,0 +1,26 @@
+{% extends "base.html" %}{% block body %}
+<div style="display:flex;justify-content:space-between;align-items:end;flex-wrap:wrap;gap:10px">
+<div><span class="pill">Campaign Day {{ today }} of 7</span><h1>Growth dashboard</h1></div>
+<a class="btn ghost" href="{{ url_for('export_csv') }}">Export CSV</a></div>
+<div class="card" style="margin:12px 0 18px"><div style="display:flex;justify-content:space-between"><b>{{ n }} / {{ goal }} registrations</b><b>{{ pct }}%</b></div>
+<div class="bar" style="margin-top:8px;height:14px"><i style="width:{{ pct }}%"></i></div>
+<p style="margin:12px 0 0" class="{{ 'ok' if n>=goal else 'alert' }}"><b>Next move:</b> {{ advice }}</p></div>
+<div class="grid g4">
+ <div class="card kpi"><div class="v">{{ projected }}</div><div class="l">projected by Day 7 (at current pace)</div></div>
+ <div class="card kpi"><div class="v">{{ k_factor }}</div><div class="l">viral coefficient (referred ÷ non-referred)</div></div>
+ <div class="card kpi"><div class="v">{{ sharers }}</div><div class="l">students who brought ≥1 friend</div></div>
+ <div class="card kpi"><div class="v">{{ final_year_pct }}%</div><div class="l">final-year (target audience fit) · {{ n_colleges }} colleges</div></div>
+</div>
+<div class="grid g2" style="margin-top:18px">
+ <div class="card"><h2>Cumulative vs. target pace</h2><canvas id="c1" height="220"></canvas></div>
+ <div class="card"><h2>Registrations by channel</h2><canvas id="c2" height="220"></canvas></div>
+</div>
+<div class="grid g2" style="margin-top:18px">
+ <div class="card"><h2>Top colleges</h2><table>{% for c in colleges %}<tr><td>{{ c.college }}</td><td><b>{{ c.c }}</b></td></tr>{% endfor %}</table></div>
+ <div class="card"><h2>Latest registrations</h2><table><tr><th>Name</th><th>College</th><th>Channel</th></tr>{% for r in recent %}<tr><td>{{ r.name }}</td><td class="muted">{{ r.college }}</td><td>{{ r.source }}{{ ' ← ' ~ r.referred_by if r.referred_by }}</td></tr>{% endfor %}</table></div>
+</div>
+<script src="{{ url_for('static', filename='chart.umd.js') }}"></script>
+<script>
+new Chart(c1,{type:'line',data:{labels:{{ labels|tojson }},datasets:[{label:'Actual (cumulative)',data:{{ cum|tojson }},borderColor:'#2b4eff',backgroundColor:'rgba(43,78,255,.12)',fill:true,tension:.3},{label:'Target pace to 500',data:{{ target|tojson }},borderColor:'#e08a00',borderDash:[6,4],pointRadius:0},{label:'Daily new',data:{{ daily|tojson }},type:'bar',backgroundColor:'rgba(19,163,106,.45)'}]},options:{plugins:{legend:{position:'bottom'}}}});
+new Chart(c2,{type:'bar',data:{labels:{{ by_src|map(attribute=0)|list|tojson }},datasets:[{data:{{ by_src|map(attribute=1)|list|tojson }},backgroundColor:'#2b4eff'}]},options:{indexAxis:'y',plugins:{legend:{display:false}}}});
+</script>{% endblock %}

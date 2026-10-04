@@ -1,0 +1,18 @@
+{% extends "base.html" %}{% block body %}
+<div class="grid g2" style="align-items:start">
+<div><span class="pill">WhatsApp flow · simulated</span><h1>Register without leaving WhatsApp</h1>
+<p class="muted">Students in class groups don't want to open a form. A click-to-chat link (wa.me) opens this bot; 4 questions and they're registered with their own referral code. In production this logic plugs into the WhatsApp Business API (e.g. via Interakt / WATI / Twilio) — the conversation logic is the same.</p>
+<ul class="ticks"><li>Try: <b>JOIN</b> → answer 4 questions</li><li>Then: <b>STATUS &lt;your code&gt;</b></li><li>Also: <b>ABOUT</b>, <b>HELP</b></li></ul>
+<p class="muted" style="font-size:13px">Simulated number for this session: {{ sid }}</p></div>
+<div><div class="phone"><header>NxtWave Workshops ✓<small>Business account · replies instantly</small></header>
+<div id="chat"></div>
+<form id="f"><input id="t" placeholder="Type a message" autocomplete="off"><button>➤</button></form></div>
+<div class="quick"><button class="btn ghost" onclick="send('JOIN{{ ' ' ~ ref if ref }}')">JOIN</button><button class="btn ghost" onclick="send('ABOUT')">ABOUT</button><button class="btn ghost" onclick="send('HELP')">HELP</button></div></div>
+</div>
+<script>
+const sid={{ sid|tojson }},chat=document.getElementById('chat');
+function add(t,c){const d=document.createElement('div');d.className='msg '+c;d.innerHTML=t.replace(/</g,'&lt;').replace(/\*(.+?)\*/g,'<b>$1</b>').replace(/(https?:\/\/\S+)/g,'<a href="$1" target="_blank">$1</a>');chat.appendChild(d);chat.scrollTop=chat.scrollHeight}
+async function send(m){if(!m.trim())return;add(m,'out');const r=await fetch('/api/bot',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({sid,message:m})});const j=await r.json();for(const x of j.replies){await new Promise(z=>setTimeout(z,450));add(x,'in')}}
+document.getElementById('f').onsubmit=e=>{e.preventDefault();const t=document.getElementById('t');send(t.value);t.value=''};
+add('Hi! 👋 Type *JOIN* to register for the free AI workshop.','in');
+</script>{% endblock %}
